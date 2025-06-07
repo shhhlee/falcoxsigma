@@ -11,6 +11,7 @@ import (
     "path/filepath"
     "syscall"
     "time"
+    "strings"
 
     // Falco Modern BPF Go 클라이언트
     "github.com/falcosecurity/client-go/pkg/api/outputs"
@@ -145,7 +146,19 @@ func main() {
 				attrs = append(attrs, attribute.Int(k, int(val)))
         		    default:
             			attrs = append(attrs, attribute.String(k, fmt.Sprintf("%v", val)))
-			    }	
+			    }
+			    // 추가 매핑: fd.name → TargetFilename
+			    if k == "fd.name" {
+				    attrs = append(attrs, attribute.String("TargetFilename", fmt.Sprintf("%v", v)))
+			    }
+			    // 추가 매핑: proc.cmdline → Image (첫 토큰)
+			    if k == "proc.cmdline" {
+				    parts := strings.Fields(fmt.Sprintf("%v", v))
+				    if len(parts) > 0 {
+					    attrs = append(attrs, attribute.String("Image", parts[0]))
+				    }
+			    }
+
 		    }
 	    }
 

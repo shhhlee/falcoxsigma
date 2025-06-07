@@ -73,7 +73,7 @@ func (s *server) Export(ctx context.Context, req *tracepb.ExportTraceServiceRequ
 
 func main() {
     // ── 1) Sigma 룰 디렉터리 경로 (로컬 환경에 맞게 수정) ──
-    ruleDir := "/home/shlee/Desktop/falco-sigma-pipeline/sigma_connector/rules/rules/linux"
+    ruleDir := "/home/shlee/Desktop/falcoxsigma/sigma_connector/rules/rules/linux"
 
     // ── 2) Sigma 룰셋 전체 로드 ──
     //    Config.Directory는 []string 타입이므로 반드시 슬라이스로 넘겨야 합니다. :contentReference[oaicite:5]{index=5}
