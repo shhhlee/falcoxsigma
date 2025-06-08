@@ -70,7 +70,7 @@ func main() {
     signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 
 
-    log.Println("▶▶ OutputsWatch로 이벤트 수신 시작")
+    log.Println("▶▶ 이벤트 수신 시작")
     if err := falcoClient.OutputsWatch(context.Background(),
     	func(res *outputs.Response) error {
 		log.Printf("[DEBUG exporter] Watch event: rule=%s, output_fields=%v\n",res.Rule, res.OutputFields)
