@@ -1,0 +1,23 @@
+# Your custom rules!
+- rule: Detect Specific Commands
+  desc: "특정 명령어(ls, curl, nc)를 실행하면 탐지"
+  condition: >
+    evt.type = execve and
+    proc.name in (ls, curl, nc)
+  output: "🚨 [명령어 탐지] %user.name 이 %proc.name 실행 (pid=%proc.pid)"
+  priority: WARNING
+  tags: [syscall, custom, command]
+
+- rule: Wget Creating Files in Tmp Directory
+  desc: "Detect wget creating files in /tmp or /var/tmp"
+  condition: >
+    evt.type in (open, openat, creat) and
+    proc.name = wget and
+    (
+      fd.name startswith "/tmp/" or
+      fd.name startswith "/var/tmp/"
+    )
+  output: "🚨 Wget is creating file %fd.name (user=%user.name command=%proc.cmdline)"
+  priority: WARNING
+  tags: [command, file_activity, custom]
+
