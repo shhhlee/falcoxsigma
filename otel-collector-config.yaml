@@ -1,8 +1,9 @@
+# otel-collector.yaml (수정본)
 receivers:
   otlp:
     protocols:
       grpc:
-        endpoint: 0.0.0.0:4317        # falco_exporter → Collector
+        endpoint: 0.0.0.0:4317
 
 processors:
   transform/falco_to_sigma:
@@ -16,23 +17,30 @@ processors:
           - 'set(attributes["proc.name"], "wget") where attributes["proc.name"] == nil and IsMatch(attributes["proc.cmdline"], "^wget\\s")'
 
   batch:
+    timeout: 200ms
 
 exporters:
   otlp/sigma:
-    endpoint: "localhost:55680"      # Collector → sigma_connector
+    endpoint: "localhost:55680"
     tls:
-      insecure: true                 # 평문 gRPC
+      insecure: true
+  file/falco_jsonl:                 # ← 새로 추가
+    path: ./falco_agent/event/events.jsonl
+    rotation:
+      max_megabytes: 100
+      max_backups:   5
+    format: json
   debug:
-    verbosity: detailed              # 콘솔에 변환 결과 확인용
+    verbosity: detailed
 
 service:
   pipelines:
     traces:
       receivers:  [otlp]
       processors: [transform/falco_to_sigma, batch]
-      exporters:  [otlp/sigma, debug]
+      exporters:  [otlp/sigma, file/falco_jsonl, debug]  # ← 동시에 세 곳으로 전송
 
   telemetry:
     logs:
-      level: debug                   # Collector 자체 로그 레벨
+      level: debug
 
