@@ -1,0 +1,38 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317        # falco_exporter → Collector
+
+processors:
+  transform/falco_to_sigma:
+    error_mode: ignore
+    trace_statements:
+      - context: span
+        statements:
+          - 'set(attributes["Image"], attributes["proc.name"])'
+          - 'set(attributes["TargetFilename"], attributes["fd.name"]) where attributes["fd.name"] != nil'
+          - 'set(attributes["TargetFilename"], attributes["evt.arg.filename"]) where attributes["evt.arg.filename"] != nil'
+          - 'set(attributes["proc.name"], "wget") where attributes["proc.name"] == nil and IsMatch(attributes["proc.cmdline"], "^wget\\s")'
+
+  batch:
+
+exporters:
+  otlp/sigma:
+    endpoint: "localhost:55680"      # Collector → sigma_connector
+    tls:
+      insecure: true                 # 평문 gRPC
+  debug:
+    verbosity: detailed              # 콘솔에 변환 결과 확인용
+
+service:
+  pipelines:
+    traces:
+      receivers:  [otlp]
+      processors: [transform/falco_to_sigma, batch]
+      exporters:  [otlp/sigma, debug]
+
+  telemetry:
+    logs:
+      level: debug                   # Collector 자체 로그 레벨
+
