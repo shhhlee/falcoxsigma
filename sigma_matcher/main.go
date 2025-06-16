@@ -14,6 +14,13 @@ import (
 	tracepb "go.opentelemetry.io/proto/otlp/trace/v1"
 )
 
+/* Options  */
+var (
+	rulesDir = flag.String("rules", "rules/rules/linux", "Sigma 룰 디렉터리")
+	listen   = flag.String("listen", ":55680", "OTLP gRPC 수신 주소")
+)
+
+
 /* MapEvent — go-sigma-rule-engine Event 인터페이스 래퍼 */
 type MapEvent map[string]interface{}
 
@@ -26,8 +33,6 @@ type server struct {
 }
 
 func main() {
-	rulesDir := flag.String("rules", "rules/rules/linux", "Sigma 룰 디렉터리")
-	listen   := flag.String("listen", ":55680", "OTLP gRPC 수신 주소")
 	flag.Parse()
 
 	/* Sigma 룰 로드 */
@@ -53,7 +58,7 @@ func main() {
 	}
 }
 
-/* Trace RPC 핸들러 */
+/* rule matching  */
 func (s *server) Export(
 	_ context.Context,
 	req *collectortracepb.ExportTraceServiceRequest,
@@ -69,7 +74,6 @@ func (s *server) Export(
 			for _, sp := range ss.Spans {
 				event := spanToEvent(sp)
 
-				/* 반환값 두 개: results, matched */
 				results, matched := s.ruleset.EvalAll(event)
 				if matched && len(results) > 0 {
 					log.Printf("⚠️  Sigma 매칭!: %s", results[0].Title)

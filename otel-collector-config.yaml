@@ -1,4 +1,3 @@
-# otel-collector.yaml (수정본)
 receivers:
   otlp:
     protocols:
@@ -24,7 +23,7 @@ exporters:
     endpoint: "localhost:55680"
     tls:
       insecure: true
-  file/falco_jsonl:                 # ← 새로 추가
+  file/falco_jsonl:           
     path: ./falco_agent/event/events.jsonl
     rotation:
       max_megabytes: 100
@@ -38,7 +37,7 @@ service:
     traces:
       receivers:  [otlp]
       processors: [transform/falco_to_sigma, batch]
-      exporters:  [otlp/sigma, file/falco_jsonl, debug]  # ← 동시에 세 곳으로 전송
+      exporters:  [otlp/sigma, file/falco_jsonl, debug] 
 
   telemetry:
     logs:
