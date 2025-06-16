@@ -117,8 +117,9 @@ wget http://example.com/test -O /tmp/testfile
 ```
 
 * **Falco 로그**: `sudo journalctl -u falco-modern-bpf -f`
-* **Exporter 로그**: 파일 기록 및 전송 확인
-* **Connector 로그**: `[DEBUG] Incoming attributes:` 및 `Sigma 매칭:` 메시지
+* **falco_agent 로그**: 파일 기록 및 전송 확인
+* **otel collector 로그**: 데이터 표준화 및 전송 확인
+* **sigma_matcher 로그**: `[DEBUG] Incoming attributes:` 및 `Sigma 매칭:` 메시지
 
 ---
 
