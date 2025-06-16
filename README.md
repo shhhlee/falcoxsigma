@@ -104,6 +104,10 @@ cd falco_agent
 # 터미널2: sigma_matcher
 cd sigma_matcher
 ./sigma_matcher
+
+# 터미널3: otel-collector 실행
+cd falcoxsigma
+otelcol-contrib --config otel-collector-config.yaml
 ```
 ---
 
