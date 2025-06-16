@@ -1,6 +1,6 @@
 # Falco × Sigma 파이프라인
 
-Falco가 생성한 보안 이벤트를 Otel Collector를 통해 Sigma 룰 엔진으로 전달하여 실시간 탐지를 구현합니다.
+Falco가 생성한 보안 이벤트를 Otel Collector를 통해 Sigma 룰 매칭 엔진으로 전달하여 실시간 탐지를 구현합니다.
 
 ---
 
@@ -9,14 +9,18 @@ Falco가 생성한 보안 이벤트를 Otel Collector를 통해 Sigma 룰 엔진
 * **falco\_agent**
 
   * Falco Modern BPF Unix 소켓(`/run/falco/falco.sock`)에서 이벤트를 구독
-  * JSONL 파일에 이벤트 기록 (`falco_agent/event/events.jsonl`)
-  * OTLP Trace 방식으로 Sigma matcher에 전송
+  * OTLP Trace 방식으로 OTEL Collector(포트 4317)로 전송
+ 
+* **otel-collector**
+
+  * falco_agent가 보내는 OTLP Trace 스트림을 받아 필드를 표준화하고 두 개의 익스포터로 내보냄
+  * 하나는 Sigma Matcher가 대기 중인 OTLP Exporter(포트 55680)로, 다른 하나는 상대경로 falco_agent/event/events.jsonl에 JSONL 복사본을 저장하는 파일 Exporter
 
 * **sigma\_matcher**
 
   * OTLP Trace gRPC 서버(포트 55680)로 동작
   * `sigma_matcher/rules/rules/linux` 디렉터리에서 Sigma 룰(.yaml) 로드
-  * 수신된 이벤트를 Sigma 룰 엔진에 매핑·평가 후 탐지 로그 출력
+  * Collector로부터 전달된 Trace 이벤트를 Sigma 룰 엔진에 매핑·평가 후 탐지 로그 출력
 
 ---
 
@@ -95,7 +99,7 @@ go build -o sigma_matcher main.go
 # 3. 실행
 # 터미널1: falco_agent
 cd falco_agent
-./falco_exporter
+./falco_agent
 
 # 터미널2: sigma_matcher
 cd sigma_matcher
