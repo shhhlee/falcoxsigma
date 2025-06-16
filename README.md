@@ -14,7 +14,7 @@ Falco가 생성한 보안 이벤트를 Otel Collector를 통해 Sigma 룰 매칭
 * **otel-collector**
 
   * falco_agent가 보내는 OTLP Trace 스트림을 받아 필드를 표준화하고 두 개의 익스포터로 내보냄
-  * 하나는 Sigma Matcher가 대기 중인 OTLP Exporter(포트 55680)로, 다른 하나는 상대경로 falco_agent/event/events.jsonl에 JSONL 복사본을 저장하는 파일 Exporter
+  * 하나는 Sigma Matcher가 대기 중인 OTLP Exporter(포트 55680), 다른 하나는 상대경로 falco_agent/event/events.jsonl에 JSONL 복사본을 저장하는 파일 Exporter
 
 * **sigma\_matcher**
 
@@ -75,7 +75,7 @@ cd falcoxsigma/falco_agent
 cd falcoxsigma/sigma_matcher
 ./sigma_matcher
 
-#터미널3: otel-collector 실행
+# 터미널3: otel-collector 실행
 cd falcoxsigma
 otelcol-contrib --config otel-collector-config.yaml
 ```
