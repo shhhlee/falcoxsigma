@@ -9,7 +9,7 @@ Falco가 생성한 보안 이벤트를 Otel Collector를 통해 Sigma 룰 엔진
 * **falco\_agent**
 
   * Falco Modern BPF Unix 소켓(`/run/falco/falco.sock`)에서 이벤트를 구독
-  * JSONL 파일에 이벤트 기록 (`exporter/event/events.jsonl`)
+  * JSONL 파일에 이벤트 기록 (`falco_agent/event/events.jsonl`)
   * OTLP Trace 방식으로 Sigma matcher에 전송
 
 * **sigma\_matcher**
