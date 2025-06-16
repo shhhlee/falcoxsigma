@@ -63,7 +63,7 @@ func main() {
 	log.Println("종료 신호 수신, Exporter 종료")
 }
 
-/* ───────────── 이벤트 → JSONL + OTLP Span ──────────────── */
+/* ───────────── 이벤트 → OTLP Span ──────────────── */
 func handleEvent(res *outputs.Response, tracer trace.Tracer, tp *sdktrace.TracerProvider) {
 
 	/* Attribute 매핑 */

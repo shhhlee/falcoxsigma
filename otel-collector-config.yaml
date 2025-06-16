@@ -16,7 +16,6 @@ processors:
           - 'set(attributes["proc.name"], "wget") where attributes["proc.name"] == nil and IsMatch(attributes["proc.cmdline"], "^wget\\s")'
 
   batch:
-    timeout: 200ms
 
 exporters:
   otlp/sigma:
