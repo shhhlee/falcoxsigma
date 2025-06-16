@@ -65,14 +65,14 @@ sudo systemctl restart falco-modern-bpf
 git clone https://github.com/shhhlee/falcoxsigma.git
 
 # 터미널1: falco_agent 실행 파일 실행
-cd falcoxsigma/exporter
+cd falcoxsigma/falco_agent
 ./falco_agent
 
 # 터미널2: sigma_matcher 실행 파일 실행
 cd falcoxsigma/sigma_matcher
 ./sigma_matcher
 
-#터미널3:
+#터미널3: otel-collector 실행
 cd falcoxsigma
 otelcol-contrib --config otel-collector-config.yaml
 ```
