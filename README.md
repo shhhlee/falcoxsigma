@@ -84,7 +84,7 @@ git clone https://github.com/shhhlee/falcoxsigma.git
 cd falcoxsigma
 
 # 2. falco_agent, sigma_matcher 폴더 별 의존성 정리, 실행 파일 빌드
-cd exporter
+cd falco_agent
 go mod tidy
 go build -o falco_agent main.go
 
